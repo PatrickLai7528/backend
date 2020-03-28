@@ -1,13 +1,11 @@
 package com.example.demo.model;
 
 public class Controller {
-	private Controller() {
+  private Controller() {}
 
-	}
+  private static final Controller controller = new Controller();
 
-	private final static Controller controller = new Controller();
-
-	public static Controller request() {
-		return controller;
-	}
+  public static Controller request() {
+    return controller;
+  }
 }
