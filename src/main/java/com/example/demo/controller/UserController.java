@@ -1,10 +1,18 @@
 package com.example.demo.controller;
 
+import com.example.demo.entity.GitHubAccessTokenResponse;
 import com.example.demo.entity.UserInfo;
 import com.example.demo.service.IUserService;
 import com.example.demo.util.APIResponse;
 import com.example.demo.util.ResponseUtils;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
@@ -41,15 +49,30 @@ public class UserController {
     }
   }
 
+  @GetMapping("access_token")
+  @CrossOrigin("http://localhost:3000")
   public APIResponse<?> getGitHubAccessToken(@RequestParam String code) {
+    System.out.println("i am in");
+
     RestTemplate restTemplate = new RestTemplate();
-    // "https://github.com/login/oauth/access_token?" +
-    //				`client_id=${clientID}&` +
-    //				`client_secret=${clientSecret}&` +
-    //				`code=${requestToken}`,
     String url =
         String.format(
             "https://github.com/login/oauth/access_token?client_id=%s&client_secret=%s&code=%s",
             clientID, clientSecret, code);
+
+    // create headers
+    HttpHeaders headers = new HttpHeaders();
+    // set `accept` header
+    headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+
+    // create a map for post parameters
+    Map<String, Object> map = new HashMap<>();
+    // build the request
+    HttpEntity<Map<String, Object>> entity = new HttpEntity<>(map, headers);
+
+    // send POST request
+    ResponseEntity<GitHubAccessTokenResponse> response =
+        restTemplate.postForEntity(url, entity, GitHubAccessTokenResponse.class);
+    return ResponseUtils.ok("OK", response.getBody().getAccess_token());
   }
 }
