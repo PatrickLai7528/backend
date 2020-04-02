@@ -8,10 +8,9 @@ import java.util.List;
  * @author: laikinmeng
  * @package: ${IntelliJ IDEA}
  * @create: 2020-04-01 12:29
- **/
+ */
 public interface IScenarioDetector {
-	public void detect(List<String> original, List<String> newVersion, List<String> changes);
+  public void detect(List<String> original, List<String> newVersion, List<String> changes);
 
-
-	public Scenario getResult();
+  public Scenario getResult();
 }
